@@ -1,24 +1,27 @@
-# README
+# Ruby on Rails
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
+## 1. Setup Ruby on Rails
 
-* Ruby version
+- use `rbenv` or `rvm` as ruby version manager
+- use latest version of Rails (5.2.1)
+- use postgresql
+- use reactjs
+- use git
 
-* System dependencies
+1. Create new project
 
-* Configuration
+```
+rails new project_name -d postgresql --webpack=react
+```
 
-* Database creation
+2. Setup database
 
-* Database initialization
+```
+rails db:setup
+rails db:migrate
+```
 
-* How to run the test suite
+3. Create `index_controller.rb` to make sure Rails is running on localhost
 
-* Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
-
-* ...
