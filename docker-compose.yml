@@ -12,10 +12,18 @@ services:
     image: terraform-rails
     build:
       context: .
+      args:
+        - ADDITIONAL_PACKAGES=nodejs-current yarn
+        - EXECJS_RUNTIME=Node
+        - RAILS_ENV=development
+        - NODE_ENV=development
     environment: # this will override .env
       - POSTGRES_HOST=db
       - POSTGRES_PASSWORD
       - POSTGRES_USER=postgres
+      - SECRET_KEY_BASE=abc123
+      - RAILS_ENV=development
+      - RAILS_MAX_THREADS
     ports:
       - "3000:3000"
     links:
