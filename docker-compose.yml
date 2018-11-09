@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  db:
+    environment:
+      - POSTGRES_PASSWORD
+    image: postgres:alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app: &app_base
+    image: terraform-rails
+    build:
+      context: .
+    environment: # this will override .env
+      - POSTGRES_HOST=db
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER=postgres
+    ports:
+      - "3000:3000"
+    links:
+      - db
+    volumes:
+      - .:/app
+      - type: tmpfs
+        target: /app/tmp/pids
+
+volumes:
+  postgres_data:
+    external: true
