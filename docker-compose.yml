@@ -10,6 +10,7 @@ services:
 
   app: &app_base
     image: terraform-rails
+    dockerfile: ./devops/docker/Dockerfile
     build:
       context: .
       args:
