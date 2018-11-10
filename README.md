@@ -5,6 +5,7 @@
 - ruby 2.5.3
 - postgresql
 - reactjs
+- imagemagick
 
 ## Setup Ruby on Rails
 
@@ -148,12 +149,6 @@ By using Compose, you can define multiple container services and how they are li
 
     ```
     docker-compose down
-    ```
-
-    To remove built images
-
-    ```
-    docker-compose clean
     ```
 
 
