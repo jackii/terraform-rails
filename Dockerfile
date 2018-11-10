@@ -83,4 +83,4 @@ EXPOSE 3000
 RUN date -u > BUILD_TIME
 
 # Start up
-CMD ["bundle exec puma -C config/puma.rb"]
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

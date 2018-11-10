@@ -234,4 +234,21 @@ warning "webpack-dev-server > webpack-dev-middleware@1.12.2" has unmet peer depe
 
 Recommended [fix](https://github.com/rails/webpacker#installation) for this is to run `yarn upgrade`, but it doesn't seem to solve this error.
 
+### Docker error: OCI runtime create failed
 
+```
+ERROR: for your_app_1  Cannot start service app: OCI runtime create failed: container_linux.go:348: starting container process caused "exec: \"bundle exec puma -C config/puma.rb\": stat bundle exec puma -C config/puma.rb: no such file or directory": unknown
+
+ERROR: for app  Cannot start service app: OCI runtime create failed: container_linux.go:348: starting container process caused "exec: \"bundle exec puma -C config/puma.rb\": stat bundle exec puma -C config/puma.rb: no such file or directory": unknown
+ERROR: Encountered errors while bringing up the project.
+```
+
+__Why?__
+If a string had been to the CMD, Docker would have invoked `sh` shell as a tokenizer. And there is no `sh`
+in the container
+
+__How to fix__
+- Use json array in the CMD or ENTRYPOINT
+    ```
+    CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+    ```
