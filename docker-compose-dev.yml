@@ -4,9 +4,9 @@ version: '3.4'
 services:
   app:
     volumes:
-      - terraform-app-sync:/app:nocopy
+      - terraform-rails-app-sync:/app:nocopy
 
 volumes:
-  terraform-app-sync:
+  terraform-rails-app-sync:
     external: true
 
