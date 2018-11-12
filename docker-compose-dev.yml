@@ -1,0 +1,15 @@
+# compose file specifically for docker-sync
+version: '3.4'
+
+services:
+  app:
+    volumes:
+      - terraform-app-sync:/app:nocopy
+  worker:
+    volumes:
+      - terraform-app-sync:/app:nocopy
+
+volumes:
+  terraform-app-sync:
+    external: true
+

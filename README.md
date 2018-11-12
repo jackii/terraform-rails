@@ -201,6 +201,84 @@ There are many reasons to use nginx as web server between your app and the users
 
     Visit [http://localhost:8080](http://localhost:8080) for your app.
 
+## docker-sync
+
+[http://docker-sync.io](http://docker-sync.io)
+
+Developing with docker under OSX/ Windows is a huge pain, since sharing your code into containers will __slow down__ the
+code-execution about 60 times.
+
+
+17. Install `docker-sync`
+
+    See [installation guide](https://github.com/EugenMayer/docker-sync/wiki/docker-sync-on-OSX)
+
+
+18. Configure `docker-sync` with `docker-sync.yml`
+
+    ```
+    # docker-sync.yml
+
+    version: "2"
+
+    options:
+      verbose: true
+    syncs:
+      app-sync: # tip: add -sync and you keep consistent names as a convention
+        src: './'
+
+        # use 'native_osx' or 'unison'
+        sync_strategy: 'unison'
+
+        sync_excludes: ['.gitignore', '.git/', '.DS_Store']
+
+        # this does not user groupmap but rather configures the server to map
+        # optional: usually if you map users you want to set the user id of your application container here
+        sync_userid: '1000'
+
+        # optional, a list of regular expressions to exclude from the fswatch - see fswatch docs for details
+        # IMPORTANT: this is not supported by native_osx
+        watch_excludes: ['.*/.git', '.*/node_modules', '.*/bower_components', 'tmp', '.*/sass-cache', '.*/.sass-cache', '.*/.sass-cache', '.coffee', '.scss', '.sass', '.gitignore']
+
+        # optional: use this to switch to fswatch verbose mode
+        watch_args: '-v'
+    ```
+    See [docker-sync configuration](https://github.com/EugenMayer/docker-sync/wiki/2.-Configuration)
+
+19. Modify `docker-compose.yml` or use `docker-compose-dev.yml` which `docker-sync` will use to override the `docker-compose.yml`
+
+    ```
+    # docker-compose-dev.yml
+    version: '3.4'
+
+    services:
+      app:
+        volumes:
+          - terraform-rails-app-sync:/app:nocopy
+      worker:
+        volumes:
+          - terraform-rails-app-sync:/app:nocopy
+
+    volumes:
+      terraform-rails-app-sync:
+        external: true
+    ```
+
+    __WARNING:__ Because unison is a two-way sync, do not use the same volume name as your other apps, your codes might get
+    replaced with your other apps.
+
+20. Use `docker-sync` commands to replace `docker-compose` to start, stop and cleanup
+
+    To start
+    ```
+    docker-sync-stack start
+    ```
+    To stop, just Ctrl-C
+
+    To clean up,
+    ```
+    docker-sync-stack clean
+    ```
 
 
 
@@ -324,3 +402,5 @@ __How to fix__
     ```
     CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
     ```
+
+
