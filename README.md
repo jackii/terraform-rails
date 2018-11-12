@@ -279,6 +279,26 @@ code-execution about 60 times.
     ```
     docker-sync-stack clean
     ```
+## Worker container (sidekiq and redis)
+
+21. Install `redis` gem and use `redis` image
+
+    ```
+    # Gemfile
+
+    gem 'redis', '~> 4.0'
+    ```
+    `redis` can also be used for ActionCable
+
+    ```
+    # docker-compose.yml
+    ...
+
+    redis:
+      image: redis:5.0-alpine
+      volumes:
+        - redis_data:/data
+    ```
 
 ## See Also
 
