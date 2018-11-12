@@ -155,9 +155,9 @@ By using Compose, you can define multiple container services and how they are li
 
 There are many reasons to use nginx as web server between your app and the users.
 
-- Static redirects- you could setup your nginx to redirect all http traffic to the same url with https. This way such trivial requests will never hit your app server.
-- Multipart upload- Nginx is better suited to handle multipart uploads. Nginx will combine all the requests and send it as a single file to puma.
-- Serving static assets- It is recommended to serve static assets (those in /public/ endpoint in rails) via a webserver without loading your app server.
+- Static redirects - you could setup your nginx to redirect all http traffic to the same url with https. This way such trivial requests will never hit your app server.
+- Multipart upload - Nginx is better suited to handle multipart uploads. Nginx will combine all the requests and send it as a single file to puma.
+- Serving static assets - It is recommended to serve static assets (those in /public/ endpoint in rails) via a webserver without loading your app server.
 - There are some basic DDoS protections built-in in nginx.
 
 13. Add `devops/docker/web/Dockerfile` for nginx container
@@ -198,6 +198,8 @@ There are many reasons to use nginx as web server between your app and the users
     382b29806b87        terraform-rails       "./devops/docker/sta…"   2 minutes ago       Up 2 minutes        3000/tcp               terraform-rails_app_1
     9b7077ef437b        postgres:alpine       "docker-entrypoint.s…"   2 minutes ago       Up 2 minutes        5432/tcp               terraform-rails_db_1
     ```
+
+    Visit [http://localhost:8080](http://localhost:8080) for your app.
 
 17. To see the development log from Rails
 
