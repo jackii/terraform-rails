@@ -25,14 +25,21 @@ services:
       - SECRET_KEY_BASE=abc123
       - RAILS_ENV=development
       - RAILS_MAX_THREADS
-    ports:
-      - "3000:3000"
     links:
       - db
     volumes:
       - .:/app
       - type: tmpfs
         target: /app/tmp/pids
+
+  web:
+    build:
+      context: .
+      dockerfile: ./devops/docker/web/Dockerfile
+    depends_on:
+      - app
+    ports:
+      - 8080:80
 
 volumes:
   postgres_data:

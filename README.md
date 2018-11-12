@@ -151,8 +151,59 @@ By using Compose, you can define multiple container services and how they are li
     docker-compose down
     ```
 
+## Nginx as web server
 
+There are many reasons to use nginx as web server between your app and the users.
 
+- Static redirects- you could setup your nginx to redirect all http traffic to the same url with https. This way such trivial requests will never hit your app server.
+- Multipart upload- Nginx is better suited to handle multipart uploads. Nginx will combine all the requests and send it as a single file to puma.
+- Serving static assets- It is recommended to serve static assets (those in /public/ endpoint in rails) via a webserver without loading your app server.
+- There are some basic DDoS protections built-in in nginx.
+
+13. Add `devops/docker/web/Dockerfile` for nginx container
+
+14. Add `devops/docker/web/nginx.conf`
+
+15. Configure `docker-compose.yml` to use nginx
+
+    ```
+    # docker-compose.yml
+    ...
+    ...
+      web:
+        build:
+          context: .
+          dockerfile: ./devops/docker/web/Dockerfile
+        depends_on:
+          - app
+        ports:
+          - 8080:80
+    ...
+    ...
+    ```
+
+16. Start the containers again
+
+    ```
+    docker-compose up
+    ```
+
+    Inspect your running containers, you should see 3 containers are running, only the web container are exposing the port 8080
+
+    ```
+    docker ps
+
+    CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                  NAMES
+    8cccc470542f        terraform-rails_web   "nginx -g 'daemon of…"   2 minutes ago       Up 2 minutes        0.0.0.0:8080->80/tcp   terraform-rails_web_1
+    382b29806b87        terraform-rails       "./devops/docker/sta…"   2 minutes ago       Up 2 minutes        3000/tcp               terraform-rails_app_1
+    9b7077ef437b        postgres:alpine       "docker-entrypoint.s…"   2 minutes ago       Up 2 minutes        5432/tcp               terraform-rails_db_1
+    ```
+
+17. To see the development log from Rails
+
+    ```
+    docker-compose exec app tail -f log/development.log
+    ```
 
 # Troubleshooting
 
