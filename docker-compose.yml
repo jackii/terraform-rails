@@ -12,7 +12,7 @@ services:
     image: terraform-rails
     build:
       context: .
-      dockerfile: ./devops/docker/Dockerfile
+      dockerfile: ./devops/docker/app/Dockerfile
       args:
         - ADDITIONAL_PACKAGES=nodejs-current yarn
         - EXECJS_RUNTIME=Node
