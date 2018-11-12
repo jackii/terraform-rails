@@ -5,6 +5,9 @@ services:
   app:
     volumes:
       - terraform-rails-app-sync:/app:nocopy
+  worker:
+    volumes:
+      - terraform-rails-app-sync:/app:nocopy
 
 volumes:
   terraform-rails-app-sync:

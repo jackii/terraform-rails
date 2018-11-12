@@ -279,7 +279,82 @@ code-execution about 60 times.
     ```
     docker-sync-stack clean
     ```
+## Worker container (sidekiq and redis)
 
+21. Install `redis` gem and use `redis` image
+
+    ```
+    # Gemfile
+
+    gem 'redis', '~> 4.0'
+    ```
+    `redis` can also be used for ActionCable
+
+    ```
+    # docker-compose.yml
+    ...
+
+    redis:
+      image: redis:5.0-alpine
+      volumes:
+        - redis_data:/data
+    ```
+
+22. Install `sidekiq` gem and configure it
+
+    ```
+    # Gemfile
+
+    gem 'redis', '~> 4.0'
+    ```
+
+    ```
+    # config/sidekiq.yml
+    :concurrency: 5
+    :pidfile: ./tmp/pids/sidekiq.pid
+    :logfile: ./log/sidekiq.log
+    :queues:
+      - [default, 1]
+      - [mailers, 2]
+    ```
+
+    ```
+    # config/initializers/sidekiq.yml
+    require 'sidekiq/api'
+
+    redis_config = { url: ENV['REDIS_SIDEKIQ_URL'] }
+
+    Sidekiq.configure_server do |config|
+      config.redis = redis_config
+    end
+
+    Sidekiq.configure_client do |config|
+      config.redis = redis_config
+    end
+    ```
+
+23. Add a `worker` container to the `docker-compose.yml` and `docker-compose-dev.yml`
+
+    ```
+    # docker-compose.yml
+    worker:
+      <<: *app_base
+      volumes:
+        - .:/app
+      command: bundle exec sidekiq
+      ports: []
+      depends_on:
+        - app
+        - redis
+    ```
+
+    ```
+    # docker-sync.yml
+
+    worker:
+      volumes:
+        - terraform-rails-app-sync:/app:nocopy
+    ```
 ## See Also
 
 - [Tips](docs/tips.md)

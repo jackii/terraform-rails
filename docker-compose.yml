@@ -8,6 +8,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  redis:
+    image: redis:5.0-alpine
+    volumes:
+      - terraform_rails_redis_data:/data
+
   app: &app_base
     image: terraform-rails
     build:
@@ -25,8 +30,10 @@ services:
       - SECRET_KEY_BASE=abc123
       - RAILS_ENV=development
       - RAILS_MAX_THREADS
+      - REDIS_SIDEKIQ_URL=redis://redis:6379/0
     links:
       - db
+      - redis
     volumes:
       - .:/app
       - type: tmpfs
@@ -41,6 +48,18 @@ services:
     ports:
       - 8080:80
 
+  worker:
+    <<: *app_base
+    volumes:
+      - .:/app
+    command: bundle exec sidekiq
+    ports: []
+    depends_on:
+      - app
+      - redis
+
 volumes:
   postgres_data:
+    external: true
+  terraform_rails_redis_data:
     external: true
