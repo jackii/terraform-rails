@@ -33,6 +33,7 @@ services:
       - REDIS_SIDEKIQ_URL=redis://redis:6379/0
     links:
       - db
+      - redis
     volumes:
       - .:/app
       - type: tmpfs
@@ -46,6 +47,16 @@ services:
       - app
     ports:
       - 8080:80
+
+  worker:
+    <<: *app_base
+    volumes:
+      - .:/app
+    command: bundle exec sidekiq
+    ports: []
+    depends_on:
+      - app
+      - redis
 
 volumes:
   postgres_data:
