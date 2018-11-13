@@ -1,3 +1,9 @@
+.git
+.gitignore
+README.md
+docs/*
+
+.DS_Store
 .byebug_history
 .env*
 .git
@@ -12,7 +18,6 @@ Dockerfile
 coverage/*
 log/*
 node_modules/*
-public/assets/*
 storage/*
 public/packs/*
 public/packs-test/*
