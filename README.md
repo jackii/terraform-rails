@@ -391,6 +391,30 @@ code-execution about 60 times.
     config.active_job.queue_adapter = :sidekiq
     ```
 
+## Docker for production
+
+Docker image for production requires different docker-compose configuration.
+
+26. Add [`docker-compose-prod.yml`](docker-compose-prod.yml)
+
+The differences between development and production:-
+
+- `restart: always`
+- `healthcheck`
+- `hostname`
+- cleaner and leaner - without `development:test` bundle, remove unnecessary folders, no EXECJS_RUNTIME
+- __IMPORTANT:__ need to mount the `config/master.key` as volume for production enviroment
+
+27. To run production environment on localhost
+
+    ```
+    # start docker-sync as standalone
+    docker-sync start
+
+    # start docker-compose for production
+    docker-compose -f docker-compose-prod.yml -f docker-compose-sync.yml up
+    
+    ```
 ## See Also
 
 - [Tips](docs/tips.md)
