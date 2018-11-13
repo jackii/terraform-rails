@@ -14,7 +14,7 @@ services:
       - terraform_rails_redis_data:/data
 
   app: &app_base
-    image: terraform-rails
+    image: terraform-rails-development
     build:
       context: .
       dockerfile: ./devops/docker/app/Dockerfile

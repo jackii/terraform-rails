@@ -25,7 +25,7 @@ services:
       - terraform_rails_redis_data:/data
 
   app: &app_base
-    image: terraform-rails-production
+    image: terraform-rails
     hostname: app.my-site.com
     build:
       context: .
