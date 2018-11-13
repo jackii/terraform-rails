@@ -227,6 +227,13 @@ code-execution about 60 times.
       app-sync: # tip: add -sync and you keep consistent names as a convention
         src: './'
 
+        # optional, default: docker-compose-dev.yml if you like, you can set a custom location (path) of your compose file.
+        # Do not set it, if you do not want to use it at all
+        #
+        # if its there, it gets used, if you name it explicitly, it HAS to exist
+        # HINT: you can also use this as an array to define several compose files to include. Order is important!
+        compose-dev-file-path: 'docker-compose-sync.yml'
+
         # use 'native_osx' or 'unison'
         sync_strategy: 'unison'
 
@@ -245,10 +252,10 @@ code-execution about 60 times.
     ```
     See [docker-sync configuration](https://github.com/EugenMayer/docker-sync/wiki/2.-Configuration)
 
-19. Modify `docker-compose.yml` or use `docker-compose-dev.yml` which `docker-sync` will use to override the `docker-compose.yml`
+19. Modify `docker-compose.yml` or use `docker-compose-sync.yml` which `docker-sync` will use to override the `docker-compose.yml`
 
     ```
-    # docker-compose-dev.yml
+    # docker-compose-sync.yml
     version: '3.4'
 
     services:

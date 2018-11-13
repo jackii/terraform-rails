@@ -6,6 +6,14 @@ syncs:
   terraform-rails-app-sync: # tip: add -sync and you keep consistent names as a convention
     src: './'
 
+
+    # optional, default: docker-compose-dev.yml if you like, you can set a custom location (path) of your compose file.
+    # Do not set it, if you do not want to use it at all
+    #
+    # if its there, it gets used, if you name it explicitly, it HAS to exist
+    # HINT: you can also use this as an array to define several compose files to include. Order is important!
+    compose-dev-file-path: 'docker-compose-sync.yml'
+
     # use 'native_osx' or 'unison'
     sync_strategy: 'unison'
 
