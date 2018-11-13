@@ -411,9 +411,22 @@ The differences between development and production:-
     ```
     # start docker-compose for production
     docker-compose -f docker-compose-prod.yml up
-
     ```
+
+## Terraform
+
+Even with docker for production, you will still need to setup the infrastructure that support docker containers (and
+other services).
+
+Terraform is a infrastructure-as-a-code tool to declare your infrastructure with easy to read and write DSL. A tool to
+provision and deploy infrastructure. (See [Terraform](docs/terraform.md) for more information)
+
+
 ## See Also
 
 - [Tips](docs/tips.md)
 - [Troubleshooting](docs/troubleshooting.md)
+- [Ruby on Rails](docs/rails.md)
+- [docker](docs/docker.md)
+- [aws](docs/aws.md)
+- [terraform](docs/terraform.md)
