@@ -355,6 +355,35 @@ code-execution about 60 times.
       volumes:
         - terraform-rails-app-sync:/app:nocopy
     ```
+
+24. Start your containers
+
+    ```
+    docker-sync-stack start
+    ```
+
+    Inspect your containers
+
+    ```
+    $ docker ps
+
+    CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                       NAMES
+    90e32b9e3842        terraform-rails              "bundle exec sidekiq"    17 minutes ago      Up 17 minutes       3000/tcp                    terraform-rails_worker_1
+    c3d557215b8c        terraform-rails_web          "nginx -g 'daemon of…"   17 minutes ago      Up 17 minutes       0.0.0.0:8080->80/tcp        terraform-rails_web_1
+    b52b96a11ee3        terraform-rails              "./devops/docker/sta…"   17 minutes ago      Up 17 minutes       3000/tcp                    terraform-rails_app_1
+    f85601685371        postgres:alpine              "docker-entrypoint.s…"   17 minutes ago      Up 17 minutes       5432/tcp                    terraform-rails_db_1
+    3ca3a2e387e3        redis:5.0-alpine             "docker-entrypoint.s…"   17 minutes ago      Up 17 minutes       6379/tcp                    terraform-rails_redis_1
+    4f6028ab1d46        eugenmayer/unison:2.51.2.1   "/entrypoint.sh supe…"   17 minutes ago      Up 17 minutes       127.0.0.1:32797->5000/tcp   terraform-rails-app-sync
+    ```
+
+25. Configure ActiveJob to use sidekiq
+
+    ```
+    # config/application.rb
+
+    config.active_job.queue_adapter = :sidekiq
+    ```
+
 ## See Also
 
 - [Tips](docs/tips.md)
