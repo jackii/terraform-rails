@@ -1,0 +1,96 @@
+version: '3.4'
+
+services:
+  db:
+    environment:
+      - POSTGRES_PASSWORD=my-db-password
+    image: postgres:10-alpine
+    hostname: db.my-site.com
+    ports:
+      - 5432
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:5.0-alpine
+    hostname: redis.my-site.com
+    restart: always
+    volumes:
+      - terraform_rails_redis_data:/data
+
+  app: &app_base
+    image: terraform-rails-production
+    hostname: app.my-site.com
+    build:
+      context: .
+      dockerfile: ./devops/docker/app/Dockerfile
+      args:
+        - EXECJS_RUNTIME=Disabled
+        - RAILS_ENV=production
+        - NODE_ENV=production
+        - FOLDERS_TO_REMOVE=spec node_modules app/assets vendor/assets lib/assets tmp/cache
+        - BUNDLE_WITHOUT=development:test
+        - SECRET_KEY_BASE=fake-secret-for-assets-precompilation
+    environment: # this will override .env
+      - POSTGRES_HOST=db
+      - POSTGRES_PASSWORD=my-db-password
+      - POSTGRES_USER=postgres
+      - RAILS_ENV=production
+      - NODE_ENV=production
+      - RAILS_MAX_THREADS=5
+      - REDIS_SIDEKIQ_URL=redis://redis:6379/0
+    links:
+      - db
+      - redis
+    volumes:
+      - .:/app
+      - ./config/master.key:/app/config/master.key
+      - type: tmpfs
+        target: /app/tmp/pids
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 3000 || exit 1"]
+      interval: 5m
+      start_period: 1m
+
+  web:
+    hostname: my-site.com
+    build:
+      context: .
+      dockerfile: ./devops/docker/web/Dockerfile
+    depends_on:
+      - app
+    ports:
+      - 8080:80
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 8080 || exit 1"]
+      interval: 5m
+      start_period: 1m
+
+  worker:
+    <<: *app_base
+    volumes:
+      - .:/app
+    command: bundle exec sidekiq
+    ports: []
+    depends_on:
+      - app
+      - redis
+    restart: always
+    healthcheck:
+      test: "ps ax | grep -v grep | grep sidekiq"
+      interval: 1m
+      start_period: 1m
+
+volumes:
+  postgres_data:
+    external: true
+  terraform_rails_redis_data:
+    external: true
