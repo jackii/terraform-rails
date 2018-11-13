@@ -49,7 +49,6 @@ services:
       - db
       - redis
     volumes:
-      - .:/app
       - ./config/master.key:/app/config/master.key
       - type: tmpfs
         target: /app/tmp/pids
@@ -76,8 +75,6 @@ services:
 
   worker:
     <<: *app_base
-    volumes:
-      - .:/app
     command: bundle exec sidekiq
     ports: []
     depends_on:
