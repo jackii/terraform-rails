@@ -27,7 +27,6 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_PASSWORD
       - POSTGRES_USER=postgres
-      - SECRET_KEY_BASE=abc123
       - RAILS_ENV=development
       - RAILS_MAX_THREADS
       - REDIS_SIDEKIQ_URL=redis://redis:6379/0
