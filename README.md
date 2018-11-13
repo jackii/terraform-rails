@@ -403,17 +403,15 @@ The differences between development and production:-
 - `healthcheck`
 - `hostname`
 - cleaner and leaner - without `development:test` bundle, remove unnecessary folders, no EXECJS_RUNTIME
+- no `volumes: .:/app` for production
 - __IMPORTANT:__ need to mount the `config/master.key` as volume for production enviroment
 
 27. To run production environment on localhost
 
     ```
-    # start docker-sync as standalone
-    docker-sync start
-
     # start docker-compose for production
-    docker-compose -f docker-compose-prod.yml -f docker-compose-sync.yml up
-    
+    docker-compose -f docker-compose-prod.yml up
+
     ```
 ## See Also
 
